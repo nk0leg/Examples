@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.luxoft.training.dev018.androidexamples">
+
+    <application
+        android:name=".Dev018App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".calculator.Calculator"/>
+        <activity android:name=".intents.RootIntentsActivity"/>
+        <activity android:name=".layouts.LayoutsExample"/>
+        <activity android:name=".lifecycle.LifecycleExample"/>
+        <activity android:name=".lifecycle.LifecycleExample2"/>
+        <activity android:name=".services.ServicesExample"/>
+
+        <activity android:label="MyBrowser" android:name=".browser.BrowserActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"></action>
+                <data android:scheme="http"></data>
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+        </activity>
+
+        <service android:name=".services.SimpleIntentService"/>
+
+    </application>
+
+</manifest>

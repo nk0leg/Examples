@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">AndroidExamples</string>
+    <string name="lifecycle_example">Lifecycle example</string>
+    <string name="lifecycle_main_btnActTwo">Open second activity</string>
+    <string name="main_activity_greeting">Welcome to DEV018 course</string>
+    <string name="label_open_lifecycle_example">Open Lifecycle example</string>
+    <string name="label_calculator_divide">/</string>
+    <string name="label_calculator_multiple">*</string>
+    <string name="label_calculator_minus">-</string>
+    <string name="label_calculator_plus">+</string>
+    <string name="label_open_calculator_example">Open calc example</string>
+    <string name="label_open_layouts_example">Open layouts example</string>
+    <string name="label_open_intents_example">Open Intents example</string>
+    <string name="label_open_services_example">Open Services example</string>
+</resources>
