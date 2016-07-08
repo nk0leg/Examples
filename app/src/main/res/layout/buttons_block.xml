@@ -30,4 +30,14 @@
         android:text="@string/label_open_services_example"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/main_open_asynctask"
+        android:text="AsyncTasks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/main_open_loaders"
+        android:text="Loaders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

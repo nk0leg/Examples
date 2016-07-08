@@ -22,7 +22,20 @@
         <activity android:name=".layouts.LayoutsExample"/>
         <activity android:name=".lifecycle.LifecycleExample"/>
         <activity android:name=".lifecycle.LifecycleExample2"/>
-        <activity android:name=".services.ServicesExample"/>
+
+        <activity android:name=".services.ServicesExampleActivity"/>
+        <activity android:name=".services.broadcasts.ActivityServiceFeedbackBroadcasts"/>
+        <activity android:name=".services.localbinding.ActivityServiceLBinding"/>
+
+        <activity android:name=".background.AsyncTasksExample"/>
+        <activity android:name=".background.asynctasks.AsyncByTheWay"/>
+        <activity android:name=".background.asynctasks.AsyncSaveHack"/>
+        <activity android:name=".background.asynctasks.AsyncSimpleExample"/>
+
+        <activity android:name=".loaders.LoaderExampleActivity"/>
+
+        <activity android:name=".intents.PassDataFirst"/>
+        <activity android:name=".intents.PassedDataReceiverActivity"/>
 
         <activity android:label="MyBrowser" android:name=".browser.BrowserActivity">
             <intent-filter>

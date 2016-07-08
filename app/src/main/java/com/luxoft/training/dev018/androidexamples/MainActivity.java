@@ -5,11 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.luxoft.training.dev018.androidexamples.background.AsyncTasksExample;
 import com.luxoft.training.dev018.androidexamples.calculator.Calculator;
 import com.luxoft.training.dev018.androidexamples.intents.RootIntentsActivity;
 import com.luxoft.training.dev018.androidexamples.layouts.LayoutsExample;
 import com.luxoft.training.dev018.androidexamples.lifecycle.LifecycleExample;
-import com.luxoft.training.dev018.androidexamples.services.ServicesExample;
+import com.luxoft.training.dev018.androidexamples.loaders.LoaderExampleActivity;
+import com.luxoft.training.dev018.androidexamples.services.ServicesExampleActivity;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -23,7 +25,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.main_open_intents).setOnClickListener(this);
         findViewById(R.id.main_open_layouts).setOnClickListener(this);
         findViewById(R.id.main_open_lifecycle).setOnClickListener(this);
-
+        findViewById(R.id.main_open_asynctask).setOnClickListener(this);
+        findViewById(R.id.main_open_services).setOnClickListener(this);
+        findViewById(R.id.main_open_loaders).setOnClickListener(this);
     }
 
     @Override
@@ -47,7 +51,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.main_open_services: {
-                intent = new Intent(this, ServicesExample.class);
+                intent = new Intent(this, ServicesExampleActivity.class);
+                break;
+            }
+            case R.id.main_open_asynctask: {
+                intent = new Intent(this, AsyncTasksExample.class);
+                break;
+            }
+            case R.id.main_open_loaders: {
+                intent = new Intent(this, LoaderExampleActivity.class);
                 break;
             }
         }
