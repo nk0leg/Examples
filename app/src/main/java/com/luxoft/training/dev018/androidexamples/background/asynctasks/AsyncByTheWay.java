@@ -3,6 +3,7 @@ package com.luxoft.training.dev018.androidexamples.background.asynctasks;
 import android.support.v7.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,7 +11,8 @@ import com.luxoft.training.dev018.androidexamples.R;
 
 import java.util.concurrent.TimeUnit;
 
-public class AsyncByTheWay extends AppCompatActivity {
+
+public class AsyncByTheWay extends AppCompatActivity implements View.OnClickListener {
     MyTask mt;
     TextView tvInfo;
 
@@ -19,9 +21,11 @@ public class AsyncByTheWay extends AppCompatActivity {
         setContentView(R.layout.activity_async_btw);
 
         tvInfo = (TextView) findViewById(R.id.tvInfo);
+        findViewById(R.id.btn).setOnClickListener(this);
     }
 
-    public void onclick(View v) {
+    @Override
+    public void onClick(View v) {
         mt = new MyTask();
         mt.execute("arg_1", "arg_2", "arg_3", "arg_4");
     }
@@ -41,6 +45,7 @@ public class AsyncByTheWay extends AppCompatActivity {
                 for (String url : urls) {
                     downloadFile(url);
                     publishProgress(++cnt);
+                    Log.e(AsyncByTheWay.this.toString(), " doInBackground ");
                 }
                 TimeUnit.SECONDS.sleep(3);
             } catch (InterruptedException e) {

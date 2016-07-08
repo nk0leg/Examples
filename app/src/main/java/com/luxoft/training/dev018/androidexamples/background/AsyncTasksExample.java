@@ -2,9 +2,12 @@ package com.luxoft.training.dev018.androidexamples.background;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.TextView;
 
 import com.luxoft.training.dev018.androidexamples.R;
 import com.luxoft.training.dev018.androidexamples.background.asynctasks.AsyncByTheWay;
@@ -13,6 +16,14 @@ import com.luxoft.training.dev018.androidexamples.background.asynctasks.AsyncSim
 
 
 public class AsyncTasksExample extends AppCompatActivity implements View.OnClickListener {
+
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            ((TextView)findViewById(R.id.btn_handler_example)).setText((String)msg.obj);
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,7 +51,12 @@ public class AsyncTasksExample extends AppCompatActivity implements View.OnClick
                 break;
             }
             case R.id.btn_handler_example: {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
 
+                    }
+                }).start();
                 break;
             }
         }
