@@ -11,6 +11,7 @@ import com.luxoft.training.dev018.androidexamples.intents.RootIntentsActivity;
 import com.luxoft.training.dev018.androidexamples.layouts.LayoutsExample;
 import com.luxoft.training.dev018.androidexamples.lifecycle.LifecycleExample;
 import com.luxoft.training.dev018.androidexamples.loaders.LoaderExampleActivity;
+import com.luxoft.training.dev018.androidexamples.radioexample.HelloRadioMainActivity;
 import com.luxoft.training.dev018.androidexamples.services.ServicesExampleActivity;
 
 
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.main_open_asynctask).setOnClickListener(this);
         findViewById(R.id.main_open_services).setOnClickListener(this);
         findViewById(R.id.main_open_loaders).setOnClickListener(this);
+        findViewById(R.id.main_open_radio).setOnClickListener(this);
     }
 
     @Override
@@ -60,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.main_open_loaders: {
                 intent = new Intent(this, LoaderExampleActivity.class);
+                break;
+            }
+            case R.id.main_open_radio: {
+                intent = new Intent(this, HelloRadioMainActivity.class);
                 break;
             }
         }

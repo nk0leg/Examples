@@ -1,19 +1,41 @@
 package com.luxoft.training.dev018.androidexamples.radioexample;
 
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+
+import android.database.ContentObserver;
+import android.media.AudioManager;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.RemoteException;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.ToggleButton;
+
+import com.luxoft.training.dev018.androidexamples.R;
+
 
 public class RadioPlayerFragment extends Fragment
-        /*implements View.OnClickListener, RadialTimePickerDialog.OnTimeSetListener*/ {
+        implements View.OnClickListener {
 
-    /*private final static String TAG = RadioPlayerFragment.class.getName();
+    private final static String TAG = RadioPlayerFragment.class.getName();
 
     private ToggleButton buttonPlayPause;
-    private Button buttonStop;
-    private ImageButton buttonAlarm;
     private SeekBar volumeSeekBar;
-    private ImageButton alarmOnImageButton;
-    private TextView alarmTextView;
     private ProgressBar bufferingIndicator;
     private Animation forwardPlayAnimation;
     private Animation backwardPlayAnimation;
@@ -23,20 +45,14 @@ public class RadioPlayerFragment extends Fragment
     private OnFragmentInteractionListener mListener;
     private VolumeObserver settingsContentObserver;
     private IServiceAidlInterface streamingService;
-    private AlarmSetter alarmSetter;
 
-    *//**
-     * Class for interacting with the main interface of the service.
-     *//*
     private ServiceConnection serviceConnection = new ServiceConnection() {
+
         public void onServiceConnected(ComponentName className, IBinder service) {
             Log.i(TAG, "onServiceConnected");
             //TODO handle it better
             if (buttonPlayPause != null) {
                 buttonPlayPause.setEnabled(true);
-            }
-            if (buttonStop != null) {
-                buttonStop.setEnabled(true);
             }
 
             streamingService = IServiceAidlInterface.Stub.asInterface(service);
@@ -53,9 +69,6 @@ public class RadioPlayerFragment extends Fragment
             if (buttonPlayPause != null) {
                 buttonPlayPause.setEnabled(false);
             }
-            if (buttonStop != null) {
-                buttonStop.setEnabled(false);
-            }
 
             try {
                 streamingService.unregisterCallbacks();
@@ -68,19 +81,8 @@ public class RadioPlayerFragment extends Fragment
     };
 
 
-    *//**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment RadioPlayerFragment.
-     *//*
-    // TODO: Rename and change types and number of parameters
-    public static RadioPlayerFragment newInstance(*//*String param1, String param2*//*) {
+    public static RadioPlayerFragment newInstance() {
         RadioPlayerFragment fragment = new RadioPlayerFragment();
-        //Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
-        //fragment.setArguments(args);
         return fragment;
     }
 
@@ -104,13 +106,6 @@ public class RadioPlayerFragment extends Fragment
         forwardPlayAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.forward_play_anim);
         backwardPlayAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.backward_play_anim);
         bufferingPlayAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.buffering_play_anim);
-
-        alarmSetter = new AlarmSetter(getActivity());
-
-        *//*if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }*//*
     }
 
     @Override
@@ -150,11 +145,6 @@ public class RadioPlayerFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        RadialTimePickerDialog radialTimePicker = (RadialTimePickerDialog) getActivity()
-                .getSupportFragmentManager().findFragmentByTag(RadialTimePickerDialog.class.getName());
-        if (radialTimePicker != null) {
-            radialTimePicker.setOnTimeSetListener(this);
-        }
         updateUi();
     }
 
@@ -167,27 +157,10 @@ public class RadioPlayerFragment extends Fragment
                     setPlayButtonChecked(false);
                 }
             } catch (RemoteException e) {
-                e.printStackTrace();
+                Log.e(TAG, " ",e );
             }
         }
         volumeSeekBar.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
-
-        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.prefs_name), 0);
-        long alarmMills = prefs.getLong(getString(R.string.prefs_alarm_tag), 0);
-        if (alarmMills != 0) {
-            alarmOnImageButton.setVisibility(View.VISIBLE);
-            alarmTextView.setVisibility(View.VISIBLE);
-
-            Calendar calendar = GregorianCalendar.getInstance();
-            calendar.setTimeInMillis(alarmMills);
-            int hours = calendar.get(Calendar.HOUR_OF_DAY);
-            int minutes = calendar.get(Calendar.MINUTE);
-            alarmTextView.setText(Utils.getFormattedTime(hours, minutes));
-
-            alarmSetter.showNotification(hours, minutes);
-        } else {
-            alarmSetter.hideNotification();
-        }
     }
 
     @Override
@@ -199,13 +172,6 @@ public class RadioPlayerFragment extends Fragment
     private void initializeUIElements(View view) {
         buttonPlayPause = (ToggleButton) view.findViewById(R.id.buttonPlayPause);
         buttonPlayPause.setOnClickListener(this);
-        buttonStop = (Button) view.findViewById(R.id.buttonStop);
-        buttonStop.setOnClickListener(this);
-        buttonAlarm = (ImageButton) view.findViewById(R.id.buttonAlarm);
-        buttonAlarm.setOnClickListener(this);
-        alarmOnImageButton = (ImageButton) view.findViewById(R.id.imageButtonAlarmOn);
-        alarmOnImageButton.setOnClickListener(this);
-        alarmTextView = (TextView) view.findViewById(R.id.textViewAlarm);
         bufferingIndicator = (ProgressBar) view.findViewById(R.id.bufferingIndicator);
 
         volumeSeekBar = (SeekBar) view.findViewById(R.id.seekBarVolume);
@@ -227,90 +193,41 @@ public class RadioPlayerFragment extends Fragment
         });
     }
 
-    public void showAlarmTimePickerDialog() {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        DateTime now = DateTime.now();
-        RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
-                .newInstance(RadioPlayerFragment.this, now.getHourOfDay(), now.getMinuteOfHour(),
-                        DateFormat.is24HourFormat(getActivity()));
-        timePickerDialog.show(fm, RadialTimePickerDialog.class.getName());
-    }
-
     public void play() {
         Log.i(TAG, "Play from activity");
         if (!isPlaying) {
-            //bufferingIndicator.setVisibility(View.VISIBLE);
             buttonPlayPause.startAnimation(bufferingPlayAnimation);
             buttonPlayPause.setEnabled(false);
-            new StartPlaybackTask().execute();
+            try {
+                streamingService.play();
+            } catch (RemoteException e) {
+                Log.e(TAG, " ", e);
+            }
         }
     }
 
     public void onClick(View v) {
         try {
-            if (v == buttonPlayPause) {
-                if (!isPlaying) {
-                    //bufferingIndicator.setVisibility(View.VISIBLE);
-                    buttonPlayPause.startAnimation(bufferingPlayAnimation);
-                    buttonPlayPause.setEnabled(false);
-                    new StartPlaybackTask().execute();
-                } else {
-                    streamingService.pause();
+            switch (v.getId()) {
+                case R.id.buttonPlayPause: {
+                    if (!isPlaying) {
+                        //bufferingIndicator.setVisibility(View.VISIBLE);
+                        buttonPlayPause.startAnimation(bufferingPlayAnimation);
+                        buttonPlayPause.setEnabled(false);
+                        streamingService.play();
+                    } else {
+                        streamingService.pause();
+                    }
+                    break;
                 }
-            } else if (v == buttonStop) {
-                streamingService.stop();
-            } else if (v == buttonAlarm) {
-                showAlarmTimePickerDialog();
-            } else if (v == alarmOnImageButton) {
-                showAlarmCancelDialog();
             }
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
-    private void showAlarmCancelDialog() {
-        new AlertDialog.Builder(getActivity())
-                .setTitle("Alarm Cancellation")
-                .setMessage("Are you sure you want to cancel the alarm?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        alarmSetter.cancelAlarm();
-                        alarmOnImageButton.setVisibility(View.GONE);
-                        alarmTextView.setVisibility(View.GONE);
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-    }
 
-    @Override
-    public void onTimeSet(RadialTimePickerDialog radialTimePickerDialog, int h, int m) {
-        alarmOnImageButton.setVisibility(View.VISIBLE);
-        alarmTextView.setVisibility(View.VISIBLE);
-
-        NumberFormat format = new DecimalFormat("00");
-        alarmTextView.setText(format.format(h) + ":" + format.format(m));
-        alarmSetter.setAlarm(h, m);
-    }
-
-    *//**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     *//*
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
 
@@ -377,10 +294,8 @@ public class RadioPlayerFragment extends Fragment
             @Override
             public void run() {
                 if (visible) {
-                    //bufferingIndicator.setVisibility(View.VISIBLE);
                     buttonPlayPause.startAnimation(bufferingPlayAnimation);
                 } else {
-                    //bufferingIndicator.setVisibility(View.GONE);
                     buttonPlayPause.clearAnimation();
                 }
             }
@@ -407,16 +322,4 @@ public class RadioPlayerFragment extends Fragment
             setPlayButtonChecked(false);
         }
     };
-
-    private class StartPlaybackTask extends AsyncTask {
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            try {
-                streamingService.play();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }*/
 }

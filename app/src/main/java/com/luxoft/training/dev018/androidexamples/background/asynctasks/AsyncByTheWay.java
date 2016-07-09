@@ -1,5 +1,6 @@
 package com.luxoft.training.dev018.androidexamples.background.asynctasks;
 
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -7,6 +8,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.luxoft.training.dev018.androidexamples.R;
 
 import java.util.concurrent.TimeUnit;

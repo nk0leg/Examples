@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.luxoft.training.dev018.androidexamples">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:name=".Dev018App"
         android:allowBackup="true"
@@ -37,6 +43,8 @@
         <activity android:name=".intents.PassDataFirst"/>
         <activity android:name=".intents.PassedDataReceiverActivity"/>
 
+        <activity android:name=".radioexample.HelloRadioMainActivity"/>
+
         <activity android:label="MyBrowser" android:name=".browser.BrowserActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"></action>
@@ -46,6 +54,14 @@
         </activity>
 
         <service android:name=".services.SimpleIntentService"/>
+
+        <service
+            android:name=".radioexample.StreamingService"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/app_name"
+            android:process=":radio_service" >
+        </service>
+
 
     </application>
 
